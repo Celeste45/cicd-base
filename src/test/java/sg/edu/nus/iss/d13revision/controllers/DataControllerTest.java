@@ -1,7 +1,6 @@
 package sg.edu.nus.iss.d13revision.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,10 +10,10 @@ public class DataControllerTest {
     @Autowired
     DataController dataController;
 
-//    @Test
-//    void health() {
-//        assertEquals("HEALTH CHECK OK!", dataController.healthCheck());
-//    }
+   @Test
+   void health() {
+       assertEquals("HEALTH CHECK OK!", dataController.healthCheck());
+   }
 
     @Test
     void version() {
