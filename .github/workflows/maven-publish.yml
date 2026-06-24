@@ -1,28 +1,31 @@
-name: Maven CI Build
+name: Java CI with Maven
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
+    types: [opened, synchronize, reopened]
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up JDK 26
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 26
-          cache: maven
-
-      - name: Verify Java version
-        run: java -version
-
-      - name: Build with Maven
-        run: mvn -B clean compile
+    - uses: actions/checkout@v3
+    - name: Set up JDK 20
+      uses: actions/setup-java@v3
+      with:
+        java-version: '20'
+        distribution: 'temurin'
+        cache: maven
+    - name: Run Test with Maven
+      run: mvn -B test
+  snyk:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/maven@master
+        continue-on-error: true # To make sure that SARIF upload gets called
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
